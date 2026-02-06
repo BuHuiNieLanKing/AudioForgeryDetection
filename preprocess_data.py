@@ -131,7 +131,7 @@ def get_next_batch_count(save_path):
 # if __name__ == '__main__':
 #     # 设置数据集路径和保存路径
 #     dataset_path_ls = [
-#         './archive/small_dataset/small_dataset'
+#         r'your_dataset_path'
 #     ]
 #     save_path = './preprocessed_batches'  # 保存批次的文件夹
 #     os.makedirs(save_path, exist_ok=True)  # 创建保存路径

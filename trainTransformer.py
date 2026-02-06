@@ -115,10 +115,10 @@ def train_model(modelTrans, X_features, y, batch_size):
 #     # 模型编译
 #     modelTrans.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['categorical_accuracy'])
 #
-#     modelTrans,history,X_test,y_test = train_model(X_features,y,32)
+#     modelTrans,history,X_test,y_test = train_model(modelTrans,X_features,y,32)
 #
 #     test_loss,test_accuracy = modelTrans.evaluate(X_test,to_categorical(y_test))
 #     print(f'Test Loss: {test_loss},Test Accuracy: {test_accuracy}')
 #
-#     modelTrans.save("./module/modelTrans.h5")  # 保存模型
+#     modelTrans.save("./modules/modelTrans.h5")  # 保存模型
 #     print('模型已经保存在./module/路径下')

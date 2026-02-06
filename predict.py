@@ -3,8 +3,6 @@ from pydub import AudioSegment
 import librosa
 from keras.models import load_model
 import os
-from tqdm import tqdm
-import json
 
 # 加载并预处理音频文件
 def preprocess_data(audio_path):
@@ -76,22 +74,27 @@ def predict(audio_path,module_path):
         return "Error processing audio file"
 
 
-# result = {}
-# result['real'] = 0
-# result['fake'] = 0
-# new_audio_path = r"./archive/small_dataset/small_dataset/validation/fake"
-# model_path = './module/modelTrans.h5'
+# if __name__ == '__main__':
+#     result = {}
+#     result['real'] = 0
+#     result['fake'] = 0
+#     new_audio_path = r"F:\dataset_demo\dataset_train\testing\real"
+#     # LSTM
+#     # model_path = './modules/model_bs32.h5'
 #
-# predicted_label = predict(new_audio_path,model_path)
-# print(f"The predicted label for the Audio audio is: {predicted_label}")
-# for audio in os.listdir(new_audio_path):
-#     audio_path = os.path.join(new_audio_path,audio)
-#     predicted_label = predict(audio_path,model_path)
-#     if predicted_label == 'real':
-#         result['real'] += 1
-#     else:
-#         result['fake'] += 1
+#     # Transformer
+#     model_path = './modules/modelTrans.h5'
+#
+#     predicted_label = predict(new_audio_path, model_path)
 #     print(f"The predicted label for the Audio audio is: {predicted_label}")
-# print(result)
+#     for audio in os.listdir(new_audio_path):
+#         audio_path = os.path.join(new_audio_path, audio)
+#         predicted_label = predict(audio_path, model_path)
+#         if predicted_label == 'real':
+#             result['real'] += 1
+#         else:
+#             result['fake'] += 1
+#         print(f"The predicted label for the Audio audio is: {predicted_label}")
+#     print(result)
 
 

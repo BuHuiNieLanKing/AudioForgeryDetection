@@ -78,6 +78,7 @@ def save_features(X_features, y, save_dir, batch_id):
     # print(f'特征批次 {batch_id} 已保存到 {save_path}')
     s = f'特征批次 {batch_id} 已保存到 {save_path}'
     return s
+
 # if __name__ == '__main__':
 #     # 输入输出路径
 #     preprocessed_dir = './preprocessed_batches'  # 预处理批次数据目录
@@ -103,5 +104,5 @@ def save_features(X_features, y, save_dir, batch_id):
 #
 #         # 保存特征批次
 #         save_features(X_features, y, features_save_dir, batch_id)
-
-    print('所有批次特征已处理完毕！')
+#
+#     print('所有批次特征已处理完毕！')

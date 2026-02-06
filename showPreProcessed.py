@@ -73,11 +73,11 @@ def batch_process_npz_files(npz_folder, save_root_path):
         npz_to_waveform_images(npz_file_path, save_root_path)
 
 
-if __name__ == '__main__':
-    # 配置路径（根据你的实际路径修改）
-    npz_folder = './preprocessed_batches'  # npz文件所在文件夹
-    save_root_path = './audio_waveform_images'  # 波形图保存根路径
-
-    # 批量生成波形图
-    batch_process_npz_files(npz_folder, save_root_path)
-    print("所有npz文件的波形图已生成完成！")
+# if __name__ == '__main__':
+#     # 配置路径（根据你的实际路径修改）
+#     npz_folder = './preprocessed_batches'  # npz文件所在文件夹
+#     save_root_path = './audio_waveform_images'  # 波形图保存根路径
+#
+#     # 批量生成波形图
+#     batch_process_npz_files(npz_folder, save_root_path)
+#     print("所有npz文件的波形图已生成完成！")

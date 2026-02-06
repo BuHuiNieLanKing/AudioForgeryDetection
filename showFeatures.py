@@ -277,11 +277,11 @@ def batch_visualize_features(feature_dir, save_root_dir):
         visualize_feature_batch(feature_path, save_root_dir)
 
 
-# if __name__ == '__main__':
-#     feature_dir = './static/features'
-#     visualize_save_dir = './feature_visualizations'
-#     # 新增：创建保存目录（避免首次运行报错）
-#     os.makedirs(visualize_save_dir, exist_ok=True)
-#     batch_visualize_features(feature_dir, visualize_save_dir)
-#     print(f'特征可视化完成！图片保存在 {visualize_save_dir}')
-#     print(f'存储结构：{visualize_save_dir}/[real/fake]/[mfcc/zcr_rms/mfcc_delta]/')
+if __name__ == '__main__':
+    feature_dir = './features_batches'
+    visualize_save_dir = './feature_visualizations'
+    # 新增：创建保存目录（避免首次运行报错）
+    os.makedirs(visualize_save_dir, exist_ok=True)
+    batch_visualize_features(feature_dir, visualize_save_dir)
+    print(f'特征可视化完成！图片保存在 {visualize_save_dir}')
+    print(f'存储结构：{visualize_save_dir}/[real/fake]/[mfcc/zcr_rms/mfcc_delta]/')
