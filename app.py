@@ -1,15 +1,9 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import threading
 import shutil
-import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 import glob
-import wave
-import contextlib
-# 新增：音频格式转换依赖
-import subprocess
-import tempfile
 # 导入自定义模块
 from preprocess_data import preprocess_data as pp_data
 from features import load_data, extract_features, combine_features, save_features
@@ -77,7 +71,6 @@ def get_all_audio_files(folder_path):
 
 
 
-# ---------------------- 修复：动态生成正确的文件链接 ----------------------
 def generate_file_list_html(base_folder, current_path, base_url):
     """
     生成带子文件夹的文件列表HTML
@@ -149,7 +142,6 @@ def generate_file_list_html(base_folder, current_path, base_url):
     '''
 
 
-# ---------------------- 修复：波形图/特征图路由 ----------------------
 @app.route('/static/visualizations/waveform/')
 @app.route('/static/visualizations/waveform/<path:subpath>')
 def serve_waveform(subpath=None):

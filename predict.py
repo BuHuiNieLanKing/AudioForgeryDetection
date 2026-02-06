@@ -78,7 +78,7 @@ def predict(audio_path,module_path):
 #     result = {}
 #     result['real'] = 0
 #     result['fake'] = 0
-#     new_audio_path = r"F:\dataset_demo\dataset_train\testing\real"
+#     new_audio_path = r"your_dataset_path"
 #     # LSTM
 #     # model_path = './modules/model_bs32.h5'
 #
