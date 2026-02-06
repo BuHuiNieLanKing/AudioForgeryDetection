@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频真伪检测系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: white;
+            background: #007bff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav a:hover {
+            background: #0056b3;
+        }
+
+        .module {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+
+        .module h2 {
+            color: #444;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        form label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input, form select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        form input:focus, form select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        form button {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        form button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        form button:hover:not(:disabled) {
+            background: #218838;
+        }
+
+        /* 新增：d-none 类定义 */
+        .d-none {
+            display: none !important;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #e9f7fe;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background: #f0f8fb;
+        }
+
+        .result .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .visual-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .visual-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .visual-links a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* 适配任务状态的样式 */
+        .task-status-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .task-status-item {
+            flex: 1;
+            min-width: 180px;
+            padding: 15px;
+            background: #e9f7fe;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            transition: transform 0.2s ease;
+        }
+
+        .task-status-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .task-status-item small {
+            color: #666;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #007bff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .icon-error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* 可视化按钮样式统一 */
+        #visualForm {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        #visualForm button {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        /* 输入验证提示 */
+        .input-hint {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            form {
+                max-width: 100%;
+            }
+            #visualForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #visualForm button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>音频真伪检测系统</h1>
+
+        <!-- 导航栏 -->
+        <div class="nav">
+            <a href="/">首页</a>
+            <a href="/predict">音频预测</a>
+        </div>
+
+        <!-- 任务状态概览 -->
+        <div class="task-status-grid">
+            <div class="task-status-item">
+                <small>数据预处理</small>
+                <div class="status-badge" id="preprocess-status">
+                    {{ task_status.preprocess.message or '未开始' }}
+                </div>
+            </div>
+            <div class="task-status-item">
+                <small>特征提取</small>
+                <div class="status-badge" id="extract-status">
+                    {{ task_status.extract.message or '未开始' }}
+                </div>
+            </div>
+            <div class="task-status-item">
+                <small>模型训练</small>
+                <div class="status-badge" id="train-status">
+                    {{ task_status.train.message or '未开始' }}
+                </div>
+            </div>
+            <div class="task-status-item">
+                <small>波形可视化</small>
+                <div class="status-badge" id="wave-visual-status">
+                    {{ task_status.visualize_wave.message or '未开始' }}
+                </div>
+            </div>
+            <div class="task-status-item">
+                <small>特征可视化</small>
+                <div class="status-badge" id="feat-visual-status">
+                    {{ task_status.visualize_feat.message or '未开始' }}
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据预处理模块 -->
+        <div class="module">
+            <h2>数据预处理</h2>
+            <form id="preprocessForm">
+                <label for="datasetPath">数据集路径</label>
+                <input type="text" id="datasetPath" placeholder="例如：D:/audio_dataset" required>
+                <div class="input-hint">请输入有效的本地数据集路径或服务器数据集路径</div>
+                <button type="submit" id="preprocessBtn">开始预处理</button>
+                <div id="preprocess-result" class="status d-none"></div>
+            </form>
+        </div>
+
+        <!-- 特征提取模块 -->
+        <div class="module">
+            <h2>特征提取</h2>
+            <form id="extractForm">
+                <button type="submit" id="extractBtn">开始提取特征（ZCR/RMS/MFCC）</button>
+                <div class="status">提取前请确保已完成数据预处理</div>
+                <div id="extract-result" class="status d-none"></div>
+            </form>
+        </div>
+
+        <!-- 模型训练模块 -->
+        <div class="module">
+            <h2>模型训练</h2>
+            <form id="trainForm">
+                <label>模型类型</label>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <label>
+                        <input type="radio" name="modelType" value="lstm" checked> LSTM
+                    </label>
+                    <label>
+                        <input type="radio" name="modelType" value="transformer"> Transformer
+                    </label>
+                </div>
+                <label for="batchSize">批次大小</label>
+                <input type="number" id="batchSize" value="32" min="1" max="128">
+                <div class="input-hint">建议值：16/32/64，范围1-128</div>
+
+                <label for="epochs">训练轮数</label>
+                <input type="number" id="epochs" value="100" min="1" max="1000">
+                <div class="input-hint">建议值：50-200，范围1-1000</div>
+
+                <button type="submit" id="trainBtn">开始训练</button>
+                <div id="train-result" class="status d-none"></div>
+            </form>
+        </div>
+
+        <!-- 可视化模块 -->
+        <div class="module">
+            <h2>数据可视化</h2>
+            <form id="visualForm">
+                <button type="button" id="waveVisualBtn">生成波形可视化图</button>
+                <button type="button" id="featVisualBtn">生成特征可视化图</button>
+            </form>
+            <div id="visual-result" class="status d-none"></div>
+            <div class="visual-links">
+                <a href="/static/visualizations/waveform/" target="_blank">查看波形图</a>
+                <a href="/static/visualizations/features/" target="_blank">查看特征图</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 工具函数：更新任务状态显示
+        function updateTaskStatusDisplay(taskType, data) {
+            const statusElement = document.getElementById(`${taskType}-status`);
+            if (!statusElement) return;
+
+            // 清空原有内容
+            statusElement.innerHTML = '';
+
+            // 添加状态图标/加载动画
+            if (data.status === 'running') {
+                statusElement.innerHTML = `
+                    <div class="spinner"></div>
+                    <span>${data.message || '处理中...'}</span>
+                `;
+            } else if (data.status === 'completed') {
+                statusElement.innerHTML = `
+                    <span class="icon-success">✓</span>
+                    <span>${data.message || '完成'}</span>
+                `;
+            } else if (data.status === 'failed') {
+                statusElement.innerHTML = `
+                    <span class="icon-error">×</span>
+                    <span>${data.message || '失败'}</span>
+                `;
+            } else {
+                statusElement.innerHTML = data.message || '未开始';
+            }
+        }
+
+        // 工具函数：处理请求响应
+        async function handleRequest(url, options = {}, resultDiv, btnElement) {
+            try {
+                // 禁用按钮
+                if (btnElement) btnElement.disabled = true;
+
+                // 清空结果提示
+                resultDiv.classList.remove('d-none', 'success', 'error');
+                resultDiv.textContent = '处理中...';
+
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(`请求失败：${response.status}`);
+
+                const data = await response.json();
+
+                // 更新结果提示
+                resultDiv.textContent = data.message;
+                if (data.status === 'success') {
+                    resultDiv.classList.add('success');
+                } else {
+                    resultDiv.classList.add('error');
+                }
+
+                // 刷新任务状态
+                fetchTaskStatus();
+            } catch (error) {
+                // 网络错误/服务器错误处理
+                resultDiv.classList.add('error');
+                resultDiv.textContent = `系统错误：${error.message}，请稍后重试`;
+                console.error('请求错误：', error);
+            } finally {
+                // 启用按钮
+                if (btnElement) btnElement.disabled = false;
+            }
+        }
+
+        // 轮询任务状态（增加错误处理）
+        function fetchTaskStatus() {
+            const taskTypes = ['preprocess', 'extract', 'train', 'visualize_wave', 'visualize_feat'];
+
+            taskTypes.forEach(taskType => {
+                fetch(`/task/status/${taskType}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`获取${taskType}状态失败`);
+                        return res.json();
+                    })
+                    .then(data => updateTaskStatusDisplay(
+                        taskType === 'visualize_wave' ? 'wave-visual' :
+                        taskType === 'visualize_feat' ? 'feat-visual' : taskType,
+                        data
+                    ))
+                    .catch(error => console.error(`轮询${taskType}状态错误：`, error));
+            });
+        }
+
+        // 预处理表单提交
+        document.getElementById('preprocessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const datasetPath = document.getElementById('datasetPath').value.trim();
+            const resultDiv = document.getElementById('preprocess-result');
+            const btn = document.getElementById('preprocessBtn');
+
+            // 简单输入验证
+            if (!datasetPath) {
+                resultDiv.classList.remove('d-none');
+                resultDiv.classList.add('error');
+                resultDiv.textContent = '错误：数据集路径不能为空';
+                return;
+            }
+
+            handleRequest('/preprocess', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `dataset_path=${encodeURIComponent(datasetPath)}`
+            }, resultDiv, btn);
+        });
+
+        // 特征提取表单提交
+        document.getElementById('extractForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resultDiv = document.getElementById('extract-result');
+            const btn = document.getElementById('extractBtn');
+
+            handleRequest('/extract', {method: 'POST'}, resultDiv, btn);
+        });
+
+        // 模型训练表单提交
+        document.getElementById('trainForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const modelType = document.querySelector('input[name="modelType"]:checked').value;
+            const batchSize = document.getElementById('batchSize').value;
+            const epochs = document.getElementById('epochs').value;
+            const resultDiv = document.getElementById('train-result');
+            const btn = document.getElementById('trainBtn');
+
+            // 输入验证
+            if (batchSize < 1 || batchSize > 128) {
+                resultDiv.classList.remove('d-none');
+                resultDiv.classList.add('error');
+                resultDiv.textContent = '错误：批次大小必须在1-128之间';
+                return;
+            }
+            if (epochs < 1 || epochs > 1000) {
+                resultDiv.classList.remove('d-none');
+                resultDiv.classList.add('error');
+                resultDiv.textContent = '错误：训练轮数必须在1-1000之间';
+                return;
+            }
+
+            handleRequest('/train', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `model_type=${modelType}&batch_size=${batchSize}&epochs=${epochs}`
+            }, resultDiv, btn);
+        });
+
+        // 波形可视化按钮
+        document.getElementById('waveVisualBtn').addEventListener('click', function() {
+            const resultDiv = document.getElementById('visual-result');
+            const btn = this;
+            handleRequest('/visualize/wave', {method: 'POST'}, resultDiv, btn);
+        });
+
+        // 特征可视化按钮
+        document.getElementById('featVisualBtn').addEventListener('click', function() {
+            const resultDiv = document.getElementById('visual-result');
+            const btn = this;
+            handleRequest('/visualize/feat', {method: 'POST'}, resultDiv, btn);
+        });
+
+        // 初始化轮询（页面加载时立即执行一次，之后每2秒轮询）
+        fetchTaskStatus();
+        setInterval(fetchTaskStatus, 2000);
+    </script>
+</body>
+</html>
