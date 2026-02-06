@@ -1,0 +1,7 @@
+# 过滤JetBrains IDE配置
+.idea/
+
+# 过滤Python缓存
+__pycache__/
+*.py[cod]
+*$py.class
