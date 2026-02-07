@@ -133,7 +133,7 @@ python trainTransformer.py
 ![9.png](images/9.png)
 
 ![16.png](images/16.png)
-- 输出：训练好的模型保存至 `models` 目录（.h5格式）；训练日志保存至 `logs` 目录
+- 输出：训练好的模型保存至 `models` 目录（.h5格式）
 
 #### 5. 批量预测
 ```bash
