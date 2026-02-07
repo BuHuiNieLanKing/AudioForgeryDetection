@@ -141,7 +141,7 @@ python trainTransformer.py
 python predict.py
 ```
 
-lstm 模型预测结果
+Lstm 模型预测结果
 ![10.png](images/10.png)
 ![11.png](images/11.png)
 
